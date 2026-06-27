@@ -1,0 +1,26 @@
+# Environment — secrets, never commit
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Node / frontend
+node_modules/
+.svelte-kit/
+build/
+dist/
+*.tsbuildinfo
+
+# Editors / OS
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
