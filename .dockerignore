@@ -1,0 +1,13 @@
+# Build le backend depuis la racine du projet (pour inclure shared/).
+# On exclut tout ce qui n'appartient pas à l'image backend.
+frontend/
+.git/
+**/.venv/
+**/node_modules/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.svelte-kit/
+**/build/
+.superpowers/
+*.log

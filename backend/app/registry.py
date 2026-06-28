@@ -1,11 +1,15 @@
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
 from app.tools import ocr
 
-_CONTRACT = Path(__file__).resolve().parents[2] / "shared" / "server-tools.json"
+# Chemin du contrat partagé : surchargeable par env (conteneur), avec un
+# fallback relatif au layout du repo en dev (backend/app -> ../../shared).
+_DEFAULT_CONTRACT = Path(__file__).resolve().parents[2] / "shared" / "server-tools.json"
+_CONTRACT = Path(os.environ.get("PDFORGE_CONTRACT", str(_DEFAULT_CONTRACT)))
 SERVER_TOOL_IDS: set[str] = set(json.loads(_CONTRACT.read_text()))
 
 
