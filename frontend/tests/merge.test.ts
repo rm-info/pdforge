@@ -6,7 +6,7 @@ async function onePagePdf(): Promise<File> {
   const doc = await PDFDocument.create();
   doc.addPage([200, 200]);
   const bytes = await doc.save();
-  return new File([bytes], 'x.pdf', { type: 'application/pdf' });
+  return new File([bytes as BlobPart], 'x.pdf', { type: 'application/pdf' });
 }
 
 describe('merge client', () => {

@@ -12,5 +12,5 @@ export async function run(
     for (const p of pages) out.addPage(p);
   }
   const merged = await out.save();
-  return new Blob([merged], { type: 'application/pdf' });
+  return new Blob([merged as BlobPart], { type: 'application/pdf' });
 }
