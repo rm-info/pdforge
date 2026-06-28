@@ -27,6 +27,8 @@
       <input type="checkbox" bind:checked={values[p.key]} />
     {:else if p.type === 'number'}
       <input type="number" min={p.min} max={p.max} bind:value={values[p.key]} />
+    {:else if p.type === 'pageRange'}
+      <input type="text" placeholder="ex: 1-3,5,8-10" bind:value={values[p.key]} />
     {:else}
       <input type="text" bind:value={values[p.key]} />
     {/if}

@@ -8,7 +8,7 @@
   import ProgressBar from '$lib/ui/ProgressBar.svelte';
   import ResultDownload from '$lib/ui/ResultDownload.svelte';
 
-  let tool = $derived(getTool($page.params.id));
+  let tool = $derived(getTool($page.params.id ?? ''));
 
   let files = $state<File[]>([]);
   let values = $state<Record<string, any>>({});

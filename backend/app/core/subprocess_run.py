@@ -1,4 +1,7 @@
+import logging
 import subprocess
+
+logger = logging.getLogger("pdforge")
 
 
 class ToolError(Exception):
@@ -16,4 +19,10 @@ def run_cmd(cmd: list[str], timeout: int = 120) -> None:
     except FileNotFoundError:
         raise ToolError("missing_binary", "Outil de traitement indisponible")
     if proc.returncode != 0:
+        logger.warning(
+            "cmd %s failed (rc=%s): %s",
+            cmd[0],
+            proc.returncode,
+            proc.stderr.decode(errors="replace")[-2000:],
+        )
         raise ToolError("process_failed", "Le traitement a échoué")

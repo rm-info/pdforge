@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.registry import get_tool, SERVER_TOOL_IDS
 from app.core.tempfiles import temp_workdir
-from app.core.validation import validate_pdf, ValidationError
+from app.core.validation import validate_pdf, ValidationError, MAX_BYTES
 from app.core.subprocess_run import ToolError
 
 app = FastAPI(title="pdforge")
@@ -57,6 +57,9 @@ async def run_tool(
     with temp_workdir() as wd:
         input_paths = []
         for i, f in enumerate(files):
+            # Refus précoce sur la taille annoncée, avant de charger en mémoire.
+            if f.size is not None and f.size > MAX_BYTES:
+                return _err(400, "too_large", "Fichier trop volumineux (max 100 Mo)")
             data = await f.read()
             try:
                 validate_pdf(data)
@@ -73,8 +76,9 @@ async def run_tool(
         except ToolError as e:
             return _err(500, e.code, e.message)
     # temp supprimé ici ; octets déjà en mémoire -> streaming sûr
+    # tool.id provient du registre (valeur contrôlée), pas du path brut.
     return Response(
         content=out_bytes,
         media_type="application/pdf",
-        headers={"Content-Disposition": f'attachment; filename="{tool_id}.pdf"'},
+        headers={"Content-Disposition": f'attachment; filename="{tool.id}.pdf"'},
     )

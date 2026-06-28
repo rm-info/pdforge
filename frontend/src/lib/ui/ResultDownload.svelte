@@ -1,7 +1,16 @@
 <script lang="ts">
   let { blob = null, filename = 'result.pdf' }: { blob?: Blob | null; filename?: string } =
     $props();
-  let url = $derived(blob ? URL.createObjectURL(blob) : null);
+
+  // Object URL recréé à chaque résultat, et l'ancien révoqué pour éviter la fuite.
+  let url = $state<string | null>(null);
+  $effect(() => {
+    const next = blob ? URL.createObjectURL(blob) : null;
+    url = next;
+    return () => {
+      if (next) URL.revokeObjectURL(next);
+    };
+  });
 </script>
 
 {#if url}
