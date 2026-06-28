@@ -1,0 +1,26 @@
+services:
+  pdforge-backend:
+    build:
+      # Contexte = racine du projet pour packager shared/ dans l'image.
+      context: .
+      dockerfile: backend/Dockerfile
+      args:
+        # Hash court du commit, injecté en env (exposé par /api/health).
+        APP_COMMIT: ${APP_COMMIT:-dev}
+    image: pdforge-backend:latest
+    container_name: pdforge-backend
+    restart: unless-stopped
+    environment:
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-https://pdforge.lab.rm-info.fr}
+      APP_COMMIT: ${APP_COMMIT:-dev}
+    ports:
+      # Loopback uniquement — l'accès public/tailnet passe par Caddy (cf. I2).
+      - "127.0.0.1:8810:8000"
+    healthcheck:
+      # python:3.12-slim n'a ni curl ni wget — on utilise la stdlib.
+      test:
+        ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
