@@ -4,7 +4,11 @@ export type ClientHandler = (
 ) => Promise<Blob>;
 
 const loaders: Record<string, () => Promise<{ run: ClientHandler }>> = {
-  merge: () => import('./merge')
+  merge: () => import('./merge'),
+  rotate: () => import('./rotate'),
+  'extract-pages': () => import('./extract-pages'),
+  'remove-pages': () => import('./remove-pages'),
+  'remove-metadata': () => import('./remove-metadata')
 };
 
 export async function runClientTool(
